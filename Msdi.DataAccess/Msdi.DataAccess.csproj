@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Msdi.Core\Msdi.Core.csproj" />
+    <ProjectReference Include="..\Msdi.Entities\Msdi.Entities.csproj" />
+    <ProjectReference Include="..\Msdi.ViewModels\Msdi.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
