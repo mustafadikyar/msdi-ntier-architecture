@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Msdi.Business.Abstract;
 using Msdi.Entities.Concrete;
 using Msdi.ViewModels.DTOs;
@@ -19,6 +20,7 @@ namespace Msdi.WebApi.Controllers
 
         // GET: api/Products
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<Product>> GetProducts()
         {
             var result = _productService.GetProducts();

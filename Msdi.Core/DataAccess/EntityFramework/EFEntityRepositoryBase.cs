@@ -57,18 +57,26 @@ namespace Msdi.Core.DataAccess.EntityFramework
             }
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includeProperties)
+        public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
             using (var context = new TContext())
             {
-                IQueryable<TEntity> query = context.Set<TEntity>();
-                foreach (var includeProperty in includeProperties)
-                {
-                    query = query.Include(includeProperty);
-                }
-
-                return query.Where(predicate).FirstOrDefault();
+                return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
+
+        //public TEntity Get(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includeProperties)
+        //{
+        //    using (var context = new TContext())
+        //    {
+        //        IQueryable<TEntity> query = context.Set<TEntity>();
+        //        foreach (var includeProperty in includeProperties)
+        //        {
+        //            query = query.Include(includeProperty);
+        //        }
+
+        //        return query.Where(predicate).FirstOrDefault();
+        //    }
+        //}
     }
 }

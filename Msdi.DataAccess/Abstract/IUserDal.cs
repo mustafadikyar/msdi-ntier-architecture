@@ -10,5 +10,6 @@ namespace Msdi.DataAccess.Abstract
     public interface IUserDal : IEntityRepository<User>
     {
         List<OperationClaimDTO> GetClaims(User user);
+        User GetByMail(string mailAddress);
     }
 }

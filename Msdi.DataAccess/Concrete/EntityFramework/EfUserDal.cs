@@ -11,6 +11,15 @@ namespace Msdi.DataAccess.Concrete.EntityFramework
 {
     public class EfUserDal : EFEntityRepositoryBase<User, Msdi_2020_DbContext>, IUserDal
     {
+        public User GetByMail(string mailAddress)
+        {
+            using (Msdi_2020_DbContext db = new Msdi_2020_DbContext())
+            {
+                var user = db.Users.Where(c => c.Email == mailAddress).FirstOrDefault();
+                return user;
+            }
+        }
+
         public List<OperationClaimDTO> GetClaims(User user)
         {
             using (Msdi_2020_DbContext db = new Msdi_2020_DbContext())
@@ -23,5 +32,7 @@ namespace Msdi.DataAccess.Concrete.EntityFramework
                 return result.ToList();
             }
         }
+
+
     }
 }

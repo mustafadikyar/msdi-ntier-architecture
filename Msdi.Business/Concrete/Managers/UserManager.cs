@@ -23,7 +23,7 @@ namespace Msdi.Business.Concrete.Managers
 
         public User GetByMail(string mailAddress)
         {
-            return _userDal.Get(c => c.Email.Equals(mailAddress));
+            return _userDal.GetByMail(mailAddress);
         }
 
         public List<OperationClaimDTO> GetClaims(User user)

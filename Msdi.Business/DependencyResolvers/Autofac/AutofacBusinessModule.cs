@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Castle.DynamicProxy;
+using Msdi.Authentication.Abstract;
+using Msdi.Authentication.Helpers;
 using Msdi.Business.Abstract;
 using Msdi.Business.Concrete.Managers;
 using Msdi.DataAccess.Abstract;
@@ -20,6 +22,9 @@ namespace Msdi.Business.DependencyResolvers.Autofac
 
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();
+
+            builder.RegisterType<AuthManager>().As<IAuthService>();
+            builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
             //var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             //builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().EnableInterfaceInterceptors(new ProxyGenerationOptions()
