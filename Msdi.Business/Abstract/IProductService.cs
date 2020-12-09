@@ -14,5 +14,7 @@ namespace Msdi.Business.Abstract
         IResult AddProduct(ProductDTO productDTO);
         IResult UpdateProduct(Product product);
         IResult DeleteProduct(Product product);
+
+        IResult TransactionalOperation(Product product);
     }
 }

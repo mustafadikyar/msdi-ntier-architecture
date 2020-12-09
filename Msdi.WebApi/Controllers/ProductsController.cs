@@ -20,7 +20,7 @@ namespace Msdi.WebApi.Controllers
 
         // GET: api/Products
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<Product>> GetProducts()
         {
             var result = _productService.GetProducts();
@@ -82,6 +82,18 @@ namespace Msdi.WebApi.Controllers
         public IActionResult DeleteProduct(Product product)
         {
             var result = _productService.DeleteProduct(product);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("transaction")]
+        public IActionResult TransactionTest(Product product)
+        {
+            var result = _productService.TransactionalOperation(product);
             if (result.Success)
             {
                 return Ok(result.Message);

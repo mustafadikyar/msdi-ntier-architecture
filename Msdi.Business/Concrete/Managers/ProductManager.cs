@@ -10,6 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Msdi.Business.ValidationRules.FluentValidation;
+using FluentValidation;
+using Msdi.Core.CrossCuttingConcerns.Validation;
+using Msdi.Core.Aspects.Autofac.Validation;
+using Msdi.Core.Aspects.Autofac.Transaction;
 
 namespace Msdi.Business.Concrete.Managers
 {
@@ -23,11 +28,26 @@ namespace Msdi.Business.Concrete.Managers
             _productDal = productDal;
             _mapper = mapper;
         }
+
         public IResult AddProduct(ProductDTO productDTO)
         {
             try
             {
+                //Step 1
+                //ProductValidator productValidator = new ProductValidator();
+                //var result = productValidator.Validate(productDTO);
+                //if (!result.IsValid)
+                //{
+                //    throw new ValidationException(result.Errors);
+                //}
+
+                //Step2
+                //ValidationTool.Validate(new ProductValidator(), productDTO);
+
+
                 Product added = _mapper.Map<ProductDTO, Product>(productDTO);
+                added.IsActive = true;
+                added.RegisterDate = DateTime.Now;
                 _productDal.Add(added);
                 return new SuccessResult(BaseMessages.Added);
             }
@@ -75,6 +95,7 @@ namespace Msdi.Business.Concrete.Managers
             }
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult UpdateProduct(Product product)
         {
             try
@@ -86,6 +107,14 @@ namespace Msdi.Business.Concrete.Managers
             {
                 return new ErrorResult(BaseMessages.Error);
             }
+        }
+
+        [TransactionScopeAspect]
+        public IResult TransactionalOperation(Product product)
+        {
+            _productDal.Update(product);
+            _productDal.Add(product);
+            return new SuccessResult(BaseMessages.Updated);
         }
     }
 }
