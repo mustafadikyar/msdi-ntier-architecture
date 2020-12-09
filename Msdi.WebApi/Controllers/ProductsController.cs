@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Msdi.Authentication.Extensions;
 using Msdi.Business.Abstract;
 using Msdi.Entities.Concrete;
 using Msdi.ViewModels.DTOs;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Msdi.WebApi.Controllers
 {
@@ -23,6 +25,9 @@ namespace Msdi.WebApi.Controllers
         //[Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<Product>> GetProducts()
         {
+            //var claimRoles = User.ClaimRoles();
+            
+            
             var result = _productService.GetProducts();
             if (result.Success)
             {
@@ -71,7 +76,7 @@ namespace Msdi.WebApi.Controllers
             var result = _productService.AddProduct(productDTO);
             if (result.Success)
             {
-                return Created("",result.Message);
+                return Created("", result.Message);
             }
 
             return NoContent();

@@ -9,12 +9,15 @@ using Msdi.ViewModels.Constants.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Msdi.Business.ValidationRules.FluentValidation;
-using FluentValidation;
-using Msdi.Core.CrossCuttingConcerns.Validation;
 using Msdi.Core.Aspects.Autofac.Validation;
 using Msdi.Core.Aspects.Autofac.Transaction;
+using Msdi.Core.Aspects.Autofac.Caching;
+using Microsoft.AspNetCore.Http;
+using Msdi.Authentication.Extensions;
+using Msdi.Business.BusinessAspects.Autofac;
+using Msdi.Core.Aspects.Autofac.Performance;
+using System.Threading;
 
 namespace Msdi.Business.Concrete.Managers
 {
@@ -22,6 +25,7 @@ namespace Msdi.Business.Concrete.Managers
     {
         private readonly IProductDal _productDal;
         private readonly IMapper _mapper;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ProductManager(IProductDal productDal, IMapper mapper)
         {
@@ -29,6 +33,8 @@ namespace Msdi.Business.Concrete.Managers
             _mapper = mapper;
         }
 
+        [CacheRemoveAspect(pattern: "IProductService.Get", Priority = 1)]
+        [CacheRemoveAspect(pattern: "ICategoryService.Get", Priority = 2)]
         public IResult AddProduct(ProductDTO productDTO)
         {
             try
@@ -70,10 +76,12 @@ namespace Msdi.Business.Concrete.Managers
             }
         }
 
+        [SecuredOperation(roles: "Admin")]
         public IDataResult<ProductDTO> GetProduct(int id)
         {
             try
             {
+                //var claimRoles = _httpContextAccessor.HttpContext.User.ClaimRoles();
                 var product = _mapper.Map<Product, ProductDTO>(_productDal.Get(c => c.ProductId.Equals(id)));
                 return new SuccessDataResult<ProductDTO>(product);
             }
@@ -83,10 +91,13 @@ namespace Msdi.Business.Concrete.Managers
             }
         }
 
+        //[CacheAspect(duration: 60)]
+        [PerformanceAspect(5)]
         public IDataResult<List<Product>> GetProducts()
         {
             try
             {
+                Thread.Sleep(5000);
                 return new SuccessDataResult<List<Product>>(_productDal.GetAll().ToList());
             }
             catch (Exception ex)

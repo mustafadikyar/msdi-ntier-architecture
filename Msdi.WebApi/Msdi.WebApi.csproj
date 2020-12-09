@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Msdi.Authentication\Msdi.Authentication.csproj" />
     <ProjectReference Include="..\Msdi.Business\Msdi.Business.csproj" />
     <ProjectReference Include="..\Msdi.Entities\Msdi.Entities.csproj" />
     <ProjectReference Include="..\Msdi.ViewModels\Msdi.ViewModels.csproj" />

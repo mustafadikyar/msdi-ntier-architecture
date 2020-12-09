@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Msdi.Authentication.Encyption;
 using Msdi.Authentication.Models;
+using Msdi.Core.DependencyResolvers;
+using Msdi.Core.Extensions;
+using Msdi.Core.Utilities.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +58,10 @@ namespace Msdi.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Msdi.WebApi", Version = "v1" });
+            });
+
+            services.AddDependencyResolvers(new ICoreModule[] {
+                new CoreModule()
             });
         }
 
