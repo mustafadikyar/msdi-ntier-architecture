@@ -4,6 +4,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Msdi.Core.CrossCuttingConcerns.Caching.Redis
 {
+
+    /// <summary>
+    /// Kurulumda hatalar oluştu. İncelenemedi.
+    /// </summary>
+
     public class RedisCacheManager : ICacheManager
     {
         private readonly IDistributedCache _cache;
