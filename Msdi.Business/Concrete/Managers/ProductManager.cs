@@ -18,6 +18,8 @@ using Msdi.Authentication.Extensions;
 using Msdi.Business.BusinessAspects.Autofac;
 using Msdi.Core.Aspects.Autofac.Performance;
 using System.Threading;
+using Msdi.Core.Aspects.Autofac.Logging;
+using Msdi.Core.CrossCuttingConcerns.Logging.Log4net.Loggers;
 
 namespace Msdi.Business.Concrete.Managers
 {
@@ -33,9 +35,10 @@ namespace Msdi.Business.Concrete.Managers
             _mapper = mapper;
         }
 
-        [CacheRemoveAspect(pattern: "IProductService.Get", Priority = 1)]
-        [CacheRemoveAspect(pattern: "ICategoryService.Get", Priority = 2)]
-        public IResult AddProduct(ProductDTO productDTO)
+        //[CacheRemoveAspect(pattern: "IProductService.Get", Priority = 1)]
+        //[CacheRemoveAspect(pattern: "ICategoryService.Get", Priority = 2)]
+        [CacheAspect(600)]
+        public IResult AddProduct(List<ProductDTO> productDTO)
         {
             try
             {
@@ -51,13 +54,13 @@ namespace Msdi.Business.Concrete.Managers
                 //ValidationTool.Validate(new ProductValidator(), productDTO);
 
 
-                Product added = _mapper.Map<ProductDTO, Product>(productDTO);
+                Product added = _mapper.Map<ProductDTO, Product>(productDTO.FirstOrDefault());
                 added.IsActive = true;
                 added.RegisterDate = DateTime.Now;
                 _productDal.Add(added);
                 return new SuccessResult(BaseMessages.Added);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ErrorResult(BaseMessages.Error);
             }
@@ -93,11 +96,14 @@ namespace Msdi.Business.Concrete.Managers
 
         //[CacheAspect(duration: 60)]
         [PerformanceAspect(5)]
+        //[LogAspect(typeof(FileLogger))]
+        //[LogAspect(typeof(DatabaseLogger))]
+        [CacheAspect(600)]
         public IDataResult<List<Product>> GetProducts()
         {
             try
             {
-                Thread.Sleep(5000);
+                //Thread.Sleep(5000);
                 return new SuccessDataResult<List<Product>>(_productDal.GetAll().ToList());
             }
             catch (Exception ex)

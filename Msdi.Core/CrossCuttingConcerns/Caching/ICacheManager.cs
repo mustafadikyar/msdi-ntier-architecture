@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Msdi.Core.CrossCuttingConcerns.Caching
+﻿namespace Msdi.Core.CrossCuttingConcerns.Caching
 {
-      public interface ICacheManager
+    public interface ICacheManager
     {
         T Get<T>(string key);
         object Get(string key);

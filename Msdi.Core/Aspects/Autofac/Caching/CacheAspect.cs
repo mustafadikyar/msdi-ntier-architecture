@@ -10,7 +10,7 @@ namespace Msdi.Core.Aspects.Autofac.Caching
     public class CacheAspect : MethodInterception
     {
         private int _duration;
-        private ICacheManager _cacheManager;
+        private ICacheManager _cacheManager;        
 
         public CacheAspect(int duration = 60)
         {
@@ -28,7 +28,7 @@ namespace Msdi.Core.Aspects.Autofac.Caching
                 invocation.ReturnValue = _cacheManager.Get(key);
                 return;
             }
-            invocation.Proceed();
+            invocation.Proceed();          
             _cacheManager.Add(key, invocation.ReturnValue, _duration);
         }
     }

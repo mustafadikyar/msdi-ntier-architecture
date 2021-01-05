@@ -7,6 +7,5 @@ namespace Msdi.Authentication.Abstract
     public interface ITokenHelper
     {
         AccessToken CreateToken(User user, List<OperationClaim> claims);
-
     }
 }

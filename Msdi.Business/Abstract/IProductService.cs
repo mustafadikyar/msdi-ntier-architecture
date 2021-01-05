@@ -11,7 +11,7 @@ namespace Msdi.Business.Abstract
     {
         IDataResult<ProductDTO> GetProduct(int id);
         IDataResult<List<Product>> GetProducts();
-        IResult AddProduct(ProductDTO productDTO);
+        IResult AddProduct(List<ProductDTO> productDTO);
         IResult UpdateProduct(Product product);
         IResult DeleteProduct(Product product);
 

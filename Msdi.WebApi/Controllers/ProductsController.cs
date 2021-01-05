@@ -5,6 +5,7 @@ using Msdi.Business.Abstract;
 using Msdi.Entities.Concrete;
 using Msdi.ViewModels.DTOs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Msdi.WebApi.Controllers
@@ -71,7 +72,7 @@ namespace Msdi.WebApi.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostProduct(ProductDTO productDTO)
+        public IActionResult PostProduct(List<ProductDTO> productDTO)
         {
             var result = _productService.AddProduct(productDTO);
             if (result.Success)
@@ -91,7 +92,6 @@ namespace Msdi.WebApi.Controllers
             {
                 return Ok(result.Message);
             }
-
             return NoContent();
         }
 
