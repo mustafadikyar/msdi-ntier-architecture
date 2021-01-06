@@ -1,54 +1,97 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Msdi.Core.CrossCuttingConcerns.Caching.Redis
 {
 
-    /// <summary>
-    /// Kurulumda hatalar oluştu. İncelenemedi.
-    /// </summary>
-
     public class RedisCacheManager : ICacheManager
     {
+        /// <summary>
+        /// List of keys
+        /// </summary>
+        private List<string> StoredKeys { get; set; }
+
+        /// <summary>
+        /// JSON Serializer settings
+        /// </summary>
+        private JsonSerializerSettings JsonSerializerSettings { get; }
+
+
+        /// <summary>
+        /// Instance of redis
+        /// </summary>
         private readonly IDistributedCache _cache;
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="cache">Distributed caching (Redis)</param>
         public RedisCacheManager(IDistributedCache cache)
         {
             _cache = cache;
         }
 
+
+        /// <summary>
+        /// Sets an object of type T to a redis key
+        /// </summary>
+        /// <param name="key">Key to access the object</param>
+        /// <param name="data"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         public void Add(string key, object data, int duration = 0)
         {
             
             _cache.Set(key, data as byte[]);
         }
 
+
+        /// <summary>
+        /// Gets the data corresponding to a redis key
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="key">Key to access the object</param>
+        /// <returns></returns>
         public T Get<T>(string key)
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (var memoryStream = new MemoryStream())
-            {
-                var bytes = _cache.Get(key);
-                if (bytes is null) return default(T);
-
-                memoryStream.Write(bytes, 0, bytes.Length);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return (T)binaryFormatter.Deserialize(memoryStream);
-            }
+            var value = _cache.GetString(key);
+            return value == null
+                    ? default
+                    : JsonConvert.DeserializeObject<T>(value, JsonSerializerSettings);
         }
 
+        /// <summary>
+        /// Gets the data corresponding to a redis key
+        /// </summary>
+        /// <param name="key">Key to access the object</param>
+        /// <returns></returns>
         public object Get(string key)
         {
             return _cache.Get(key);
         }
 
+        /// <summary>
+        /// Returns true if an entry with specified redis key exists
+        /// </summary>
+        /// <param name="key">Key to verify</param>
+        /// <returns></returns>
         public bool IsExist(string key)
         {
-            throw new System.NotImplementedException();
+            // var value = _redisCache.GetString(key);
+            // return value != null;
+            return StoredKeys.Contains(key);
         }
 
+        /// <summary>
+        /// Deletes a specified redis key
+        /// </summary>
+        /// <param name="key">Key to delete</param>
+        /// <returns></returns>
         public void Remove(string key)
         {
             _cache.Remove(key);
@@ -58,5 +101,31 @@ namespace Msdi.Core.CrossCuttingConcerns.Caching.Redis
         {
             throw new System.NotImplementedException();
         }
+
+
+        #region -- Private Methods --
+
+        private void ManageKeys(string key, bool delete = false)
+        {
+            if (delete)
+            {
+                if (StoredKeys.Contains(key))
+                {
+                    StoredKeys.Remove(key);
+                }
+
+                return;
+            }
+
+            StoredKeys.Add(key);
+            StoredKeys = StoredKeys.Distinct().ToList();
+        }
+
+        private List<string> GetKeys()
+        {
+            return StoredKeys;
+        }
+
+        #endregion
     }
 }
