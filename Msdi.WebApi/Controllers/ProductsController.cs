@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Msdi.Authentication.Extensions;
 using Msdi.Business.Abstract;
+using Msdi.Business.BusinessAspects.Autofac;
 using Msdi.Entities.Concrete;
 using Msdi.ViewModels.DTOs;
 using System.Collections.Generic;

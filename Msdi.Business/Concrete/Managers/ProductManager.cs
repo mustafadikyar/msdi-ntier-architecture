@@ -13,16 +13,12 @@ using Msdi.Business.ValidationRules.FluentValidation;
 using Msdi.Core.Aspects.Autofac.Validation;
 using Msdi.Core.Aspects.Autofac.Transaction;
 using Msdi.Core.Aspects.Autofac.Caching;
-using Microsoft.AspNetCore.Http;
-using Msdi.Authentication.Extensions;
 using Msdi.Business.BusinessAspects.Autofac;
 using Msdi.Core.Aspects.Autofac.Performance;
-using System.Threading;
-using Msdi.Core.Aspects.Autofac.Logging;
-using Msdi.Core.CrossCuttingConcerns.Logging.Log4net.Loggers;
 
 namespace Msdi.Business.Concrete.Managers
 {
+
     public class ProductManager : IProductService
     {
         private readonly IProductDal _productDal;
