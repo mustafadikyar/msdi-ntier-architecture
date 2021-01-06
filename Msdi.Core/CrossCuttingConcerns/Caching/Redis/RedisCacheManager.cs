@@ -1,13 +1,16 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Msdi.Core.ClassAttributes;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
+using static Msdi.Core.Enumerations.ServiceLifetime;
 
 namespace Msdi.Core.CrossCuttingConcerns.Caching.Redis
 {
-
+    /// <summary>
+    /// Implementation of redis caching service (Singleton)
+    /// </summary>
+    [Service(Lifetime.Singleton)]
     public class RedisCacheManager : ICacheManager
     {
         /// <summary>
