@@ -11,6 +11,7 @@ using Msdi.Authentication.Models;
 using Msdi.Core.DependencyResolvers;
 using Msdi.Core.Extensions;
 using Msdi.Core.Utilities.IoC;
+using Msdi.WebApi.Middlewares;
 
 namespace Msdi.WebApi
 {
@@ -67,6 +68,8 @@ namespace Msdi.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Msdi.WebApi v1"));
             }
+
+            app.UseMiddleware<IpSafeMiddleware>();
 
             app.UseCors(builder => builder.WithOrigins("https://localhost").AllowAnyHeader());
 

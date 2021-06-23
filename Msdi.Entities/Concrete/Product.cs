@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Msdi.Entities.Concrete
 {
-    public partial class Product : IEntity
+    public partial class Product  : IEntity
     {
         public int ProductId { get; set; }
         public string Title { get; set; }
